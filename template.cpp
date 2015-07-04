@@ -16,5 +16,8 @@ using namespace std;
 using namespace cv;
 
 int main(void){
-	for(;;) // video capture sequence goes here
+	/*video capture sequence goes here*/
+	for(;;){
+
+	} 
 }
