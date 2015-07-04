@@ -12,13 +12,9 @@ g++ -Wall -o salida E6_2.cpp `pkg-config --cflags --libs opencv`
 #include <stdlib.h>
 #include <stdio.h>
 
-
 using namespace std;
 using namespace cv;
 
-	
-
-
 int main(void){
-
+	for(;;) // video capture sequence goes here
 }
