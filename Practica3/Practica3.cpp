@@ -4,13 +4,13 @@ g++ -Wall -o salida Practica3.cpp `pkg-config --cflags --libs opencv`
 
 */
 
-#include<iostream>
+#include <iostream>
 
-#include<opencv2/core/core.hpp>
-#include<opencv2/ml/ml.hpp>
-#include<opencv/cv.h>
-#include<opencv2/imgproc/imgproc.hpp>
-#include<opencv2/highgui/highgui.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/ml/ml.hpp>
+#include <opencv/cv.h>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -21,7 +21,7 @@ using namespace cv;
 int main(void)
 {
 	Mat Imagen;
-	 int option = 0;
+	int option = 0;
 
 	VideoCapture cap(0);
 
@@ -75,8 +75,4 @@ int main(void)
 		imshow("Camara 1", Imagen);
 		if(waitKey(30)>0) break;
 	}
-
-
-
-
 }
