@@ -30,19 +30,20 @@ int main()
     srand(time(NULL)); // seed for rand()
     printf("The mem location of matrix1 is: %p \n", &ptr_matrix1);
     printf("The mem location of matrix2 is: %p \n", &ptr_matrix2);
-    //printf("Hello World");
     // Instantiate a struct called M that has two 2d arrays of type double
     //This double for loop auto populates the matrices using
     for(int row = 0; row <= 2; ++row){
         for(int column = 0; column <= 2; column++){
             Matrix1[row][column] = rand() % 10 + 1;  // all nonzero entries for LU decomp
             Matrix2[row][column] = rand() % 10 + 1;  // all nonzero entries for LU decomp
-      //     cout<< " " << M.Matrix1[row][column] <<" "<< M.Matrix1[row][column] << " " << M.Matrix1[row][column]<< endl;
         }
     }
+    printf("1 - matrix print\n");
+    printf("2 - matrix inverse\n");
+    printf("3 - matrix determinant\n");
+    printf("4 - matrix multiply\n");
+    printf("5 - Solve system of Linear Equations\n");
 
-    cout << "1 - matrix print \n" << "2 - matrix inverse \n" << "3 - matrix determinant \n" << "4 - matrix multiply \n"
-         << "5 - Solve system of Linear equations \n" << endl;
     cin >> option;
 
     while(option != 6){
