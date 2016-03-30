@@ -4,28 +4,32 @@ g++ -Wall -o salida Practica3.cpp `pkg-config --cflags --libs opencv`
 
 */
 
-#include <iostream>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/ml/ml.hpp>
 #include <opencv/cv.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+
+#include <iostream>
 #include <stdlib.h>
-#include <stdio.h>
+#include <stdio.h> //perror
+#include <errno.h>
 
 using namespace std;
-
 using namespace cv;
 
 int main(void){
-
 	Mat Imagen;
 	int option = 0;
 
 	VideoCapture cap(0);
 
-	if(!cap.isOpened())	return -1;
+	if(!cap.isOpened()){
+    perror("Camara Error ");
+    exit(EXIT_FAILURE);
+  	return -1;
+  }
 	cout << "Choose one of the following options\n ";
   cout << "(1) Filtro 2D" << endl;
   cout << "(2) GaussianBlur" << endl;
@@ -37,8 +41,6 @@ int main(void){
 
 	while(1){
 		cap >> Imagen;
-
-
 		switch ( option ){
 			case 1:
 			//void filter2D(InputArray src, OutputArray dst, int ddepth, InputArray kernel, Point anchor=Point(-1,-1), double delta=0, int borderType=BORDER_DEFAULT )
@@ -48,7 +50,6 @@ int main(void){
         break;
 
 			case 3:blur(Imagen, Imagen, Size(50,50), Point(-1,-1));
-
         break;
 
 			case 4:blur(Imagen, Imagen, Size(50,50), Point(-1,-1));
