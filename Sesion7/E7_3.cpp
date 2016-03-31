@@ -4,14 +4,14 @@ g++ -Wall -o salida E7_3.cpp `pkg-config --cflags --libs opencv`
 
 */
 
-#include<iostream>
 
-#include<opencv2/core/core.hpp>
-#include<opencv2/ml/ml.hpp>
-#include<opencv/cv.h>
-#include<opencv2/imgproc/imgproc.hpp>
-#include<opencv2/highgui/highgui.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/ml/ml.hpp>
+#include <opencv/cv.h>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
+#include <iostream>
 #include <stdio.h>    
 #include <stdlib.h> 
 #include <stdint.h>   
@@ -24,7 +24,6 @@ g++ -Wall -o salida E7_3.cpp `pkg-config --cflags --libs opencv`
 #include <getopt.h>
 
 using namespace std;
-
 using namespace cv;
 
 /*
@@ -47,8 +46,7 @@ int serialport_writebyte(int fd, uint8_t b);
 
 int serialport_write(int fd, const char* str);
 
-int main(void)
-{
+int main(void){
 	int fd = 0;
 	int rc = 0;
 	char dato[3] ={'1','1','1'};
@@ -71,9 +69,7 @@ int main(void)
 }
 
 
-int serialport_init(const char* serialport, int baud)
-
-{
+int serialport_init(const char* serialport, int baud){
 
     struct termios toptions;
 
@@ -102,45 +98,23 @@ int serialport_init(const char* serialport, int baud)
     
 
     if (tcgetattr(fd, &toptions) < 0) {
-
         perror("init_serialport: Couldn't get term attributes");
-
         return -1;
-
     }
 
     speed_t brate = baud; // let you override switch below if needed
 
     switch(baud) {
+        case 4800:   brate=B4800;   break;
+        case 9600:   brate=B9600;   break;
+        case 19200:  brate=B19200;  break;
 
-    case 4800:   brate=B4800;   break;
 
-    case 9600:   brate=B9600;   break;
+        //case 28800:  brate=B28800;  break;
 
-// if you want these speeds, uncomment these and set #defines if Linux
-
-//#ifndef OSNAME_LINUX
-
-//    case 14400:  brate=B14400;  break;
-
-//#endif
-
-    case 19200:  brate=B19200;  break;
-
-//#ifndef OSNAME_LINUX
-
-//    case 28800:  brate=B28800;  break;
-
-//#endif
-
-    //case 28800:  brate=B28800;  break;
-
-    case 38400:  brate=B38400;  break;
-
-    case 57600:  brate=B57600;  break;
-
-    case 115200: brate=B115200; break;
-
+        case 38400:  brate=B38400;  break;
+        case 57600:  brate=B57600;  break;
+        case 115200: brate=B115200; break;
     }
 
     cfsetispeed(&toptions, brate);
@@ -166,31 +140,22 @@ int serialport_init(const char* serialport, int baud)
 
 
     toptions.c_cflag |= CREAD | CLOCAL;  // turn on READ & ignore ctrl lines
-
     toptions.c_iflag &= ~(IXON | IXOFF | IXANY); // turn off s/w flow ctrl
 
 
 
     toptions.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG); // make raw
-
     toptions.c_oflag &= ~OPOST; // make raw
-
-
 
     // see: http://unixwiz.net/techtips/termios-vmin-vtime.html
 
     toptions.c_cc[VMIN]  = 0;
-
     toptions.c_cc[VTIME] = 20;
-
     
 
     if( tcsetattr(fd, TCSANOW, &toptions) < 0) {
-
         perror("init_serialport: Couldn't set term attributes");
-
         return -1;
-
     }
     return fd;
 }
@@ -200,13 +165,10 @@ int serialport_init(const char* serialport, int baud)
 int serialport_write(int fd, const char* str){
 
     int len = strlen(str);
-
     int n = write(fd, str, len);
 
     if( n!=len ) 
-
         return -1;
-
     return n;
 }
 
@@ -215,8 +177,6 @@ int serialport_writebyte( int fd, uint8_t b){
     int n = write(fd,&b,1);
 
     if( n!=1)
-
         return -1;
-
     return 0;
 }
