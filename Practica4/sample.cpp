@@ -16,12 +16,12 @@ int low_h = 30, low_s = 30, high_h = 100, high_s = 100;
 void on_hs_trackbar(int, void *) {
     switch(hs_slider) {
         case 0:
-            setTrackbarPos("Low threshold", "Segmentation", low_h);
-            setTrackbarPos("High threshold", "Segmentation", high_h);
+            cv::setTrackbarPos("Low threshold", "Segmentation", low_h);
+            cv::setTrackbarPos("High threshold", "Segmentation", high_h);
             break;
         case 1:
-            setTrackbarPos("Low threshold", "Segmentation", low_s);
-            setTrackbarPos("High threshold", "Segmentation", high_s);
+            cv::setTrackbarPos("Low threshold", "Segmentation", low_s);
+            cv::setTrackbarPos("High threshold", "Segmentation", high_s);
             break;
     }
 }
@@ -30,11 +30,11 @@ void on_low_thresh_trackbar(int, void *) {
     switch(hs_slider) {
         case 0:
             low_h = min(high_slider - 1, low_slider);
-            setTrackbarPos("Low threshold", "Segmentation", low_h);
+            cv::setTrackbarPos("Low threshold", "Segmentation", low_h);
             break;
         case 1:
             low_s = min(high_slider - 1, low_slider);
-            setTrackbarPos("Low threshold", "Segmentation", low_s);
+            cv::setTrackbarPos("Low threshold", "Segmentation", low_s);
             break;
     }
 }
@@ -43,11 +43,11 @@ void on_high_thresh_trackbar(int, void *) {
     switch(hs_slider) {
         case 0:
             high_h = max(low_slider + 1, high_slider);
-            setTrackbarPos("High threshold", "Segmentation", high_h);
+            cv::setTrackbarPos("High threshold", "Segmentation", high_h);
             break;
         case 1:
             high_s = max(low_slider + 1, high_slider);
-            setTrackbarPos("High threshold", "Segmentation", high_s);
+            cv::setTrackbarPos("High threshold", "Segmentation", high_s);
             break;
     }
 }
@@ -65,20 +65,20 @@ int main()
             return -1;
     }
  
-    namedWindow("Video");
-    namedWindow("Segmentation");
+    cv::namedWindow("Video");
+    cv::namedWindow("Segmentation");
  
-    createTrackbar("0. H\n1. S", "Segmentation", &hs_slider, 1, on_hs_trackbar);
-    createTrackbar("Low threshold", "Segmentation", &low_slider, 255, on_low_thresh_trackbar);
-    createTrackbar("High threshold", "Segmentation", &high_slider, 255, on_high_thresh_trackbar);
+    cv::createTrackbar("0. H\n1. S", "Segmentation", &hs_slider, 1, on_hs_trackbar);
+    cv::createTrackbar("Low threshold", "Segmentation", &low_slider, 255, on_low_thresh_trackbar);
+    cv::createTrackbar("High threshold", "Segmentation", &high_slider, 255, on_high_thresh_trackbar);
      
     while(char(waitKey(1)) != 'q' && cap.isOpened())
     {
-        Mat frame, frame_thresholded, frame_hsv;
+        cv::Mat frame, frame_thresholded, frame_hsv;
                      
         cap >> frame;
  
-        cvtColor(frame, frame_hsv, CV_BGR2HSV);
+        cv::cvtColor(frame, frame_hsv, CV_BGR2HSV);
  
         // Check if the video is over
         if(frame.empty())
@@ -90,18 +90,18 @@ int main()
         // extract the Hue and Saturation channels
         int from_to[] = {0,0, 1,1};
         Mat hs(frame.size(), CV_8UC2);
-        mixChannels(&frame_hsv, 1, &hs, 1, from_to, 2);
+        cv::mixChannels(&frame_hsv, 1, &hs, 1, from_to, 2);
  
         // check the image for a specific range of H and S
-        inRange(hs, Scalar(low_h, low_s), Scalar(high_h, high_s), frame_thresholded);
+        cv::inRange(hs, Scalar(low_h, low_s), Scalar(high_h, high_s), frame_thresholded);
  
         // open and close to remove noise
-        Mat str_el = getStructuringElement(MORPH_ELLIPSE, Size(7, 7));
-        morphologyEx(frame_thresholded, frame_thresholded, MORPH_OPEN, str_el);
-        morphologyEx(frame_thresholded, frame_thresholded, MORPH_CLOSE, str_el);
+        cv::Mat str_el = getStructuringElement(MORPH_ELLIPSE, Size(7, 7));
+        cv::morphologyEx(frame_thresholded, frame_thresholded, MORPH_OPEN, str_el);
+        cv::morphologyEx(frame_thresholded, frame_thresholded, MORPH_CLOSE, str_el);
          
-        imshow("Video", frame);
-        imshow("Segmentation", frame_thresholded);
+        cv::imshow("Video", frame);
+        cv::imshow("Segmentation", frame_thresholded);
     }
  
     return 0;
