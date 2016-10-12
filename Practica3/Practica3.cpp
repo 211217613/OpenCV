@@ -1,10 +1,3 @@
-
-/*
-g++ -Wall -o salida Practica3.cpp `pkg-config --cflags --libs opencv`
-
-*/
-
-
 #include <opencv2/core/core.hpp>
 #include <opencv2/ml/ml.hpp>
 #include <opencv/cv.h>
@@ -16,28 +9,28 @@ g++ -Wall -o salida Practica3.cpp `pkg-config --cflags --libs opencv`
 #include <stdio.h> //perror
 #include <errno.h>
 
-using namespace std;
+// TODO remove namespaces
 using namespace cv;
 
-int main(void){
+int main(void) {
 	Mat Imagen;
-	int option = 0;
+	uint32_t option = 0;
 
-	VideoCapture cap(0);
+	VideoCapture cap(1);
 
 	if(!cap.isOpened()){
-    perror("Camara Error ");
-    exit(EXIT_FAILURE);
-  	return -1;
-  }
-	cout << "Choose one of the following options\n ";
-  cout << "(1) Filtro 2D" << endl;
-  cout << "(2) GaussianBlur" << endl;
-  cout << "(3) blur" << endl;
-  cout << "(4) blur + HSV" << endl;
-  cout << "(5) blur + GRAY" << endl;
-  cout << "(6) erode + blur + GaussianBlur + HSV" << endl;
-  cin >> option;
+		perror("Camara Error ");
+		exit(EXIT_FAILURE);
+		return -1;
+	}
+	std::cout << "Choose one of the following options\n ";
+	std::cout << "(1) Filtro 2D" << std::endl;
+	std::cout << "(2) GaussianBlur" << std::endl;
+	std::cout << "(3) blur" << std::endl;
+	std::cout << "(4) blur + HSV" << std::endl;
+	std::cout << "(5) blur + GRAY" << std::endl;
+	std::cout << "(6) erode + blur + GaussianBlur + HSV" << std::endl;
+	std::cin >> option;
 
 	while(1){
 		cap >> Imagen;
@@ -67,7 +60,7 @@ int main(void){
         break;
 
       default:
-        cout << " Whats going on \n";
+        std::cout << " Whats going on \n";
         break;
 
 		}
