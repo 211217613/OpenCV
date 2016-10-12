@@ -1,2 +1,2 @@
 all:
-	g++ -Wall -o salida Practica8.cpp `pkg-config --cflags --libs opencv`
+	g++ -Wall -o ./bin/salida Practica8.cpp `pkg-config --cflags --libs opencv`
