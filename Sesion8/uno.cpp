@@ -1,6 +1,6 @@
 //g++ -Wall -o salida E8_1.cpp `pkg-config --cflags --libs opencv`
 
-#include "opencv2/ml/ml.hpp">
+#include "opencv2/ml/ml.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include <iostream>
@@ -21,11 +21,9 @@ void LearnFromImages(CvMat* trainData, CvMat* trainClasses);
 void RunSelfTest(KNearest& knn2);
 void AnalyseImage(KNearest knearest);
 /** @function main */
-int main(int argc, char** argv)
-{
-
- CvMat* trainData = cvCreateMat(classes * train_samples,ImageSize, CV_32FC1);
- CvMat* trainClasses = cvCreateMat(classes * train_samples, 1, CV_32FC1);
+int main(int argc, char** argv){
+  CvMat* trainData = cvCreateMat(classes * train_samples,ImageSize, CV_32FC1);
+  CvMat* trainClasses = cvCreateMat(classes * train_samples, 1, CV_32FC1);
 
  namedWindow("single", CV_WINDOW_AUTOSIZE);
  namedWindow("all",CV_WINDOW_AUTOSIZE);
@@ -44,8 +42,7 @@ int main(int argc, char** argv)
 
 }
 
-void PreProcessImage(Mat *inImage,Mat *outImage,int sizex, int sizey)
-{
+void PreProcessImage(Mat *inImage,Mat *outImage,int sizex, int sizey){
  Mat grayImage,blurredImage,thresholdImage,contourImage,regionOfInterest;
 
  vector<vector<Point> > contours;

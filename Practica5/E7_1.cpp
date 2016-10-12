@@ -1,24 +1,21 @@
-/*
-g++ -Wall -o salida E6_2.cpp `pkg-config --cflags --libs opencv`
-*/
+/* g++ -Wall -o salida E6_2.cpp `pkg-config --cflags --libs opencv` */
 
-#include<iostream>
-
-#include<opencv2/core/core.hpp> // core data structures, data types and memory management
-#include<opencv2/ml/ml.hpp> // statistical models and clasification algorithms
-#include<opencv/cv.h>
-#include<opencv2/imgproc/imgproc.hpp>  // image filtering, 
-#include<opencv2/highgui/highgui.hpp> //GUI, reading and writing images and video
+#include <iostream>
+#include <opencv2/core/core.hpp> // core data structures, data types and memory management
+#include <opencv2/ml/ml.hpp> // statistical models and clasification algorithms
+#include <opencv/cv.h>
+#include <opencv2/imgproc/imgproc.hpp>  // image filtering, 
+#include <opencv2/highgui/highgui.hpp> //GUI, reading and writing images and video
 #include <stdlib.h>
 #include <stdio.h>
 
-#include<getopt.h>
-#include<sys/ioctl.h>
+#include <getopt.h>
+#include <sys/ioctl.h>
 
 
 using namespace std;
-
 using namespace cv;
+
 Mat plantilla;
 Mat camera, camera_small;
 
@@ -82,7 +79,7 @@ int main(void){
 		return -1;
 	
 	plantilla = imread("Plantilla.png", CV_LOAD_IMAGE_COLOR);
-	namedWindow("Sistema");
+	cv::namedWindow("Sistema");
 	
 	
 	// puts text in a namedWindow box
@@ -90,12 +87,12 @@ int main(void){
 	
 //	int createButton( const string& bar_name, ButtonCallback on_change, void* userdata=NULL, inttype=CV_PUSH_BUTTON, bool initial_button_state=0 )
 
-	createButton("LED OFF",buttonCallBack,NULL,CV_PUSH_BUTTON,1);
-	createButton("LED ON",buttonCallBack,NULL,CV_PUSH_BUTTON,1);
+	cv::createButton("LED OFF",buttonCallBack,NULL,CV_PUSH_BUTTON,1);
+	cv::createButton("LED ON",buttonCallBack,NULL,CV_PUSH_BUTTON,1);
 	
-	createButton("Save",buttonCallBackSave,NULL,CV_PUSH_BUTTON,1);
-	putText(plantilla, "Practica5", Point(30,30), FONT_HERSHEY_PLAIN, 2, Scalar(0,255,0), 1, CV_AA);
-	setMouseCallback("Sistema", cuandoElRatonSeMueve, 0);	
+	cv::createButton("Save",buttonCallBackSave,NULL,CV_PUSH_BUTTON,1);
+	cv::putText(plantilla, "Practica5", Point(30,30), FONT_HERSHEY_PLAIN, 2, Scalar(0,255,0), 1, CV_AA);
+	cv::setMouseCallback("Sistema", cuandoElRatonSeMueve, 0);	
 	Rect taco(Point(280, 0), Size(320, 240));
 	for( ; ; ){
 		cam >> camera;

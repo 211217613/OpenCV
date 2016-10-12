@@ -1,7 +1,3 @@
-/*
-g++ -Wall -o salida Practica8.cpp `pkg-config --cflags --libs opencv`
-*/
-
 #include <iostream>
 
 #include <opencv2/core/core.hpp> // core data structures, data types and memory management
@@ -29,14 +25,11 @@ static void onMouse( int event, int x, int y, int, void* ){
 				if((x >= 250) && (x <= 350) && (y >= 100 ) && (y <= 200))
 					putText(plantilla, "1", Point(604,128), FONT_HERSHEY_PLAIN, 8, Scalar(0,255,0), 1, CV_AA);
 
-
 			}  
 			if (i == 1){
 				if((x >= 40) && (x <= 359) && (y >= 50 ) && (y <= 289))
 					imshow("BIG", camera);
 			}
-
-
 			if((x >= 0) && (x <= 100) && (y >= 0 ) && (y <= 50)){
 				cout << i << endl;
 				i = 0;	
@@ -84,21 +77,15 @@ int main(void){
 	plot_png = imread("plot.png", CV_LOAD_IMAGE_COLOR);
 	grafica = imread("Grafica.png", CV_LOAD_IMAGE_COLOR);
 
-	
-	
 	namedWindow("Main");
-		
 	//putText(plantilla, "adc0:", Point(301,270), FONT_HERSHEY_PLAIN, 2, Scalar(0,255,0), 1, CV_AA);
 	setMouseCallback("Main", onMouse, 0);	
-	
-
 	for( ; ; ){
 		cam >> camera;
 		cvtColor(camera, camera_gray, CV_RGB2GRAY);
 		imshow("Main", inicio_png);
 
 		switch (i){
-
 			case 0:{
 			//	Rect first(Point(50, 100), Size(300, 400));
 				//inicio_png.copyTo(plantilla(first));
@@ -125,7 +112,6 @@ int main(void){
 				camera_small.copyTo(plantilla(cam4));
 				break;
 			}
-
 			case 2:
 				
 				imshow("Main", grafica);
@@ -156,7 +142,5 @@ int inicio_fcn(){
 
 
 int cam_fcn(){
-
-
  	return 0;
 }

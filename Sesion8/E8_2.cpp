@@ -1,17 +1,12 @@
+/*  http://todbot.com/arduino/host/arduino-serial/arduino-serial.c */
 
-/*
-g++ -Wall -o salida E8_2.cpp `pkg-config --cflags --libs opencv`
-http://todbot.com/arduino/host/arduino-serial/arduino-serial.c
-*/
+#include <opencv2/core/core.hpp>
+#include <opencv2/ml/ml.hpp>
+#include <opencv/cv.h>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
-#include<iostream>
-
-#include<opencv2/core/core.hpp>
-#include<opencv2/ml/ml.hpp>
-#include<opencv/cv.h>
-#include<opencv2/imgproc/imgproc.hpp>
-#include<opencv2/highgui/highgui.hpp>
-
+#include <iostream>
 #include <stdio.h>    
 #include <stdlib.h> 
 #include <stdint.h>   
@@ -23,8 +18,11 @@ http://todbot.com/arduino/host/arduino-serial/arduino-serial.c
 #include <sys/ioctl.h>
 #include <getopt.h>
 
+// TODO: remove namespaces
+// TODO: rename cpp
+// TODO: seperate functionality into different files
+// TODO: use cmake
 using namespace std;
-
 using namespace cv;
 
 /*
@@ -41,7 +39,6 @@ TTYACM0   TTYACM1
 serialport_write -> escribir una cadena de caracteres en puerto serial indicado por la variable fd.
 
 
-
 */
 int serialport_init(const char* serialport, int baud);
 
@@ -51,92 +48,103 @@ int serialport_write(int fd, const char* str);
 
 int serialport_read_until(int fd, char* buf, char until);
 
+// From other file...keeping here to see whats good
+// int main(void){
+//     int fd = 0;
+//     int rc = 0;
+//     char dato[3] ={'1','1','1'};
 
 
-int main(void)
-{
+//     fd = serialport_init("/dev/ttyACM0", B9600);
+
+//     if(fd == -1) return -1; // Si no se abre el puerto termina el program
+
+//         usleep(3000 * 1000 );    // Retardo de 3,000,000 us = 3s
+
+//     rc = serialport_write(fd, dato);
+//     if(rc==-1) return -1;
+
+//     rc = serialport_writebyte(fd, 'A');
+//     if(rc==-1) return -1;
+
+//     close(fd);
+//     exit(EXIT_SUCCESS);    
+// }
+
+int main(void){
 	int fd = 0;
-	char comando;
-	char numero[20];
 	int opc;
+    char comando;
+    char numero[20];
 	char dato[30] = {};
 	//char c[30]={};
 	//char escribe[30]={};
+    //TODO: better error handling of serial port connections
 	fd = serialport_init("/dev/ttyACM0", B9600);
 
  	if(fd == -1) return -1; // Si no se abre el puerto termina el program
         usleep(3000 * 1000 );	 // Retardo de 3,000,000 us = 3s
-for(;;)
-        {
-		fflush(stdout);     
+    for(;;){
+		std::fflush(stdout);     
 		fflush(stdin); 
-               serialport_read_until(fd, dato, 0x0A);  
-	       cout << dato <<  endl;
-	       cout << "Selecciona una opcion" << endl;
-	       cout << "0 enviar operacion, 1 enviar numero : ";
-	       cin >> opc;
-		switch(opc)
-			{
-				case 0:
-					 cout << "Ingresa la operacion: *, +, % " ;
-					 cin >> comando;
-				         serialport_writebyte(fd, comando);
-					 break;
-				case 1:
-					 cout << "Ingresa el numero" ;
-					 cin >> numero;
-				         serialport_write(fd, numero);
-					 break;
-				case 2:
-					return 1;
-				default:
-					cout << "Error" << endl;
+        serialport_read_until(fd, dato, 0x0A);  
+        std::cout << dato <<  endl;
+        std::cout << "Selecciona una opcion" << endl;
+        std::cout << "0 enviar operacion, 1 enviar numero : ";
+        std::cin >> opc;
+		switch(opc){
+			case 0:
+				 std::cout << "Ingresa la operacion: *, +, % " ;
+				 std::cin >> comando;
+			         serialport_writebyte(fd, comando);
+				 break;
+			case 1:
+				 std::cout << "Ingresa el numero" ;
+				 std::cin >> numero;
+			         serialport_write(fd, numero);
+				 break;
+			case 2:
+				return 1;
+			default:
+				std::cout << "Error" << endl;
 
-			}
+		}
                
-		if(waitKey(30)>0) break;
-		
-        }
+		if(waitKey(30)>0) break;	
+    }
 	close(fd);
 	exit(EXIT_SUCCESS);    
 }
 
 
-int serialport_init(const char* serialport, int baud)
-
-{
-
+int serialport_init(const char* serialport, int baud){
     struct termios toptions;
-
     int fd;
     fd = open(serialport, O_RDWR | O_NOCTTY);
-    if (fd == -1)  {
+    if (fd == -1){
         perror("init_serialport: Unable to open port ");
-        return -1;
+        return EXIT_FAILURE; // TODO: use exit status
     }
 
     
-    if (tcgetattr(fd, &toptions) < 0) {
+    if (tcgetattr(fd, &toptions) < 0){
         perror("init_serialport: Couldn't get term attributes");
-        return -1;
+        return -1; // TODO: use exit status
     }
 
     speed_t brate = baud; // let you override switch below if needed
     switch(baud) {
-    case 4800:   brate=B4800;   break;
-    case 9600:   brate=B9600;   break;
+        case 4800:   brate=B4800;   break;
+        case 9600:   brate=B9600;   break;
 
-    case 19200:  brate=B19200;  break;
-    case 38400:  brate=B38400;  break;
-    case 57600:  brate=B57600;  break;
-    case 115200: brate=B115200; break;
-
+        case 19200:  brate=B19200;  break;
+        case 38400:  brate=B38400;  break;
+        case 57600:  brate=B57600;  break;
+        case 115200: brate=B115200; break;
     }
 
     cfsetispeed(&toptions, brate);
     cfsetospeed(&toptions, brate);
-
-
 
     // 8N1
 
@@ -156,13 +164,11 @@ int serialport_init(const char* serialport, int baud)
         return -1;
     }
     return fd;
-
 }
 
 
 
-int serialport_write(int fd, const char* str)
-{
+int serialport_write(int fd, const char* str){
     int len = strlen(str);
     int n = write(fd, str, len);
     if( n!=len ) 
@@ -170,16 +176,14 @@ int serialport_write(int fd, const char* str)
     return n;
 }
 
-int serialport_writebyte( int fd, uint8_t b)
-{
+int serialport_writebyte( int fd, uint8_t b){
     int n = write(fd,&b,1);
     if( n!=1)
         return -1;
     return 0;
 }
 
-int serialport_read_until(int fd, char* buf, char until)
-{
+int serialport_read_until(int fd, char* buf, char until){
     char b[1];
     int i=0;
     do { 
@@ -195,6 +199,3 @@ int serialport_read_until(int fd, char* buf, char until)
     buf[i] = 0;  // null terminate the string
     return 0;
 }
-	
-
-
