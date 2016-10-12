@@ -110,26 +110,19 @@ void leer(int que)
                   mensaje(2);
     } 
 }
-void realiza_operacion()
-{
-  switch(operacion)
-   {
-    case '+' :
-                resultado = A+B;
+void realiza_operacion(){
+  switch(operacion){
+    case '+' :resultado = A+B;
               break;
-    case '*' :
-                resultado = A*B;
+    case '*' :resultado = A*B;
               break;
-    case '%' :
-                resultado = A%B;
+    case '%' :resultado = A%B;
               break;
-    default :
-              mensaje(5);
+    default :mensaje(5);
    } 
 }
 
-void loop()
-{
+void loop(){
   mensaje(0);
   leer(0);
   mensaje(3);
@@ -138,6 +131,4 @@ void loop()
   leer(2);
   realiza_operacion();
   mensaje(6);
-
-
 }
