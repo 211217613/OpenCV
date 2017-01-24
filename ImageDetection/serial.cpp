@@ -1,6 +1,3 @@
-/*  http://todbot.com/arduino/host/arduino-serial/arduino-serial.c */
-
-
 // #include <opencv2/core/core.hpp>
 // #include <opencv2/ml/ml.hpp>
 // #include <opencv/cv.h>
