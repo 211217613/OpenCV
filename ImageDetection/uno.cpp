@@ -1,4 +1,3 @@
-//g++ -Wall -o salida E8_1.cpp `pkg-config --cflags --libs opencv`
 
 #include "opencv2/ml/ml.hpp"
 #include "opencv2/highgui/highgui.hpp"
@@ -85,8 +84,8 @@ void LearnFromImages(CvMat* trainData, CvMat* trainClasses)
   img = imread(file, 1);
   if (!img.data)
   {
-    cout << "File " << file << " not found\n";
-    exit(1);
+	cout << "File " << file << " not found\n";
+	exit(1);
   }
   Mat outfile;
   PreProcessImage(&img, &outfile, sizex, sizey);
@@ -99,30 +98,29 @@ void LearnFromImages(CvMat* trainData, CvMat* trainClasses)
 
 }
 
-void RunSelfTest(KNearest& knn2)
-{
- Mat img;
- CvMat* sample2 = cvCreateMat(1, ImageSize, CV_32FC1);
- // SelfTest
- char file[255];
- int z = 0;
- while (z++ < 10)
- {
-  int iSecret = rand() % 10;
-  //cout << iSecret;
-  sprintf(file, "%s/%d.png", pathToImages, iSecret);
-  img = imread(file, 1);
-  Mat stagedImage;
-  PreProcessImage(&img, &stagedImage, sizex, sizey);
-  for (int n = 0; n < ImageSize; n++)
-  {
-   sample2->data.fl[n] = stagedImage.data[n];
+void RunSelfTest(KNearest& knn2) {
+	Mat img;
+	CvMat* sample2 = cvCreateMat(1, ImageSize, CV_32FC1);
+
+	// SelfTest
+	char file[255];
+	int z = 0;
+	while (z++ < 10) {
+		int iSecret = rand() % 10;
+		//cout << iSecret;
+		sprintf(file, "%s/%d.png", pathToImages, iSecret);
+		img = imread(file, 1);
+		Mat stagedImage;
+		PreProcessImage(&img, &stagedImage, sizex, sizey);
+		for (int n = 0; n < ImageSize; n++)
+			{
+				   sample2->data.fl[n] = stagedImage.data[n];
   }
   float detectedClass = knn2.find_nearest(sample2, 1);
   if (iSecret != (int) ((detectedClass)))
   {
    cout << "Falsch. Ist " << iSecret << " aber geraten ist "
-     << (int) ((detectedClass));
+	 << (int) ((detectedClass));
    exit(1);
   }
   cout << "Richtig " << (int) ((detectedClass)) << "\n";
@@ -132,50 +130,36 @@ void RunSelfTest(KNearest& knn2)
 
 }
 
-void AnalyseImage(KNearest knearest)
-{
+void AnalyseImage(KNearest knearest) {
+	CvMat* sample2 = cvCreateMat(1, ImageSize, CV_32FC1);
+	Mat image, gray, blur, thresh;
+	vector < vector<Point> > contours;
+	image = imread("../images/buchstaben.png", 1);
+	cvtColor(image, gray, COLOR_BGR2GRAY);
+	GaussianBlur(gray, blur, Size(5, 5), 2, 2);
+	adaptiveThreshold(blur, thresh, 255, 1, 1, 11, 2);
+	findContours(thresh, contours, RETR_LIST, CHAIN_APPROX_SIMPLE);
+	for (size_t i = 0; i < contours.size(); i++) {
+		vector < Point > cnt = contours[i];
+		if (contourArea(cnt) > 50) {
+			Rect rec = boundingRect(cnt);
+			if (rec.height > 28) {
+				Mat roi = image(rec);
 
- CvMat* sample2 = cvCreateMat(1, ImageSize, CV_32FC1);
-
- Mat image, gray, blur, thresh;
-
- vector < vector<Point> > contours;
- image = imread("../images/buchstaben.png", 1);
-
- cvtColor(image, gray, COLOR_BGR2GRAY);
- GaussianBlur(gray, blur, Size(5, 5), 2, 2);
- adaptiveThreshold(blur, thresh, 255, 1, 1, 11, 2);
- findContours(thresh, contours, RETR_LIST, CHAIN_APPROX_SIMPLE);
-
- for (size_t i = 0; i < contours.size(); i++)
- {
-  vector < Point > cnt = contours[i];
-  if (contourArea(cnt) > 50)
-  {
-   Rect rec = boundingRect(cnt);
-   if (rec.height > 28)
-   {
-    Mat roi = image(rec);
-    Mat stagedImage;
-    PreProcessImage(&roi, &stagedImage, sizex, sizey);
-    for (int n = 0; n < ImageSize; n++)
-    {
-     sample2->data.fl[n] = stagedImage.data[n];
-    }
-    float result = knearest.find_nearest(sample2, 1);
-    rectangle(image, Point(rec.x, rec.y),
-      Point(rec.x + rec.width, rec.y + rec.height),
-      Scalar(0, 0, 255), 2);
-
-    imshow("all", image);
-    cout << result << "\n";
-
-    imshow("single", stagedImage);
-    waitKey(0);
-   }
-
-  }
-
- }
+				Mat stagedImage;
+				PreProcessImage(&roi, &stagedImage, sizex, sizey);
+				for (int n = 0; n < ImageSize; n++) {
+					sample2->data.fl[n] = stagedImage.data[n];
+				}
+				float result = knearest.find_nearest(sample2, 1);
+				rectangle(image, Point(rec.x, rec.y),
+				Point(rec.x + rec.width, rec.y + rec.height),
+				Scalar(0, 0, 255), 2);
+				imshow("all", image);
+				cout << result << "\n";
+				imshow("single", stagedImage);
+				waitKey(0);
+			}
+		}
+	}
 }
-
