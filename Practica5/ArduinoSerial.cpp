@@ -63,7 +63,6 @@ int serialport_init(const char* serialport, int baud){
         perror("init_serialport: Couldn't set term attributes");
         return -1;
     }
-
     return fd;
 }
 
