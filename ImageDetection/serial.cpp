@@ -79,8 +79,12 @@ int main(void) {
     // TODO: better error handling of serial port connections
     fd = serialport_init("/dev/ttyACM0", B9600);
 
-    if (fd == -1) return -1;  // Si no se abre el puerto termina el program
-        usleep(3000 * 1000);    // Retardo de 3,000,000 us = 3s
+    if (fd == -1) {
+	    perror("Can't open ttyACM0");
+	    return -1;  // Si no se abre el puerto termina el program
+    }
+
+    usleep(3000 * 1000);    // Retardo de 3,000,000 us = 3s
     for (;;) {
         fflush(stdout);
         fflush(stdin);
