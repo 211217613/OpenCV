@@ -6,7 +6,6 @@
 #include <stdio.h>
 
 using namespace cv;
-using namespace std;
 
 const int train_samples = 1;
 const int classes = 10;
@@ -19,83 +18,66 @@ void PreProcessImage(Mat *inImage,Mat *outImage,int sizex, int sizey);
 void LearnFromImages(CvMat* trainData, CvMat* trainClasses);
 void RunSelfTest(KNearest& knn2);
 void AnalyseImage(KNearest knearest);
-/** @function main */
-int main(int argc, char** argv){
-  CvMat* trainData = cvCreateMat(classes * train_samples,ImageSize, CV_32FC1);
-  CvMat* trainClasses = cvCreateMat(classes * train_samples, 1, CV_32FC1);
 
- namedWindow("single", CV_WINDOW_AUTOSIZE);
- namedWindow("all",CV_WINDOW_AUTOSIZE);
+int main(int argc, char** argv) {
+	CvMat* trainData = cvCreateMat(classes * train_samples,ImageSize, CV_32FC1);
+	CvMat* trainClasses = cvCreateMat(classes * train_samples, 1, CV_32FC1);
 
- LearnFromImages(trainData, trainClasses);
+	namedWindow("single", CV_WINDOW_AUTOSIZE);
+	namedWindow("all",CV_WINDOW_AUTOSIZE);
 
- KNearest knearest(trainData, trainClasses);
+	LearnFromImages(trainData, trainClasses);
 
- RunSelfTest(knearest);
+	KNearest knearest(trainData, trainClasses);
 
- cout << "losgehts\n";
+	RunSelfTest(knearest);
+	AnalyseImage(knearest);
 
- AnalyseImage(knearest);
-
- return 0;
-
+	return 0;
 }
 
-void PreProcessImage(Mat *inImage,Mat *outImage,int sizex, int sizey){
- Mat grayImage,blurredImage,thresholdImage,contourImage,regionOfInterest;
+void PreProcessImage(Mat *inImage,Mat *outImage,int sizex, int sizey) {
+	Mat grayImage,blurredImage,thresholdImage,contourImage,regionOfInterest;
+	vector<vector<Point> > contours;
+	cvtColor(*inImage,grayImage , COLOR_BGR2GRAY);
+	GaussianBlur(grayImage, blurredImage, Size(5, 5), 2, 2);
+	adaptiveThreshold(blurredImage, thresholdImage, 255, 1, 1, 11, 2);
+	thresholdImage.copyTo(contourImage);
+	findContours(contourImage, contours, RETR_LIST, CHAIN_APPROX_SIMPLE);
 
- vector<vector<Point> > contours;
+	int idx = 0;
+	size_t area = 0;
+	for (size_t i = 0; i < contours.size(); i++) {
+		if (area < contours[i].size() ) {
+			idx = i;
+			area = contours[i].size();
+		}
+	}
 
- cvtColor(*inImage,grayImage , COLOR_BGR2GRAY);
+	Rect rec = boundingRect(contours[idx]);
 
- GaussianBlur(grayImage, blurredImage, Size(5, 5), 2, 2);
- adaptiveThreshold(blurredImage, thresholdImage, 255, 1, 1, 11, 2);
+	regionOfInterest = thresholdImage(rec);
 
- thresholdImage.copyTo(contourImage);
-
- findContours(contourImage, contours, RETR_LIST, CHAIN_APPROX_SIMPLE);
-
- int idx = 0;
- size_t area = 0;
- for (size_t i = 0; i < contours.size(); i++)
- {
-  if (area < contours[i].size() )
-  {
-   idx = i;
-   area = contours[i].size();
-  }
- }
-
- Rect rec = boundingRect(contours[idx]);
-
- regionOfInterest = thresholdImage(rec);
-
- resize(regionOfInterest,*outImage, Size(sizex, sizey));
-
+	resize(regionOfInterest,*outImage, Size(sizex, sizey));
 }
 
-void LearnFromImages(CvMat* trainData, CvMat* trainClasses)
-{
- Mat img;
- char file[255];
- for (int i = 0; i < classes; i++)
- {
-  sprintf(file, "%s/%d.png", pathToImages, i);
-  img = imread(file, 1);
-  if (!img.data)
-  {
-	cout << "File " << file << " not found\n";
-	exit(1);
-  }
-  Mat outfile;
-  PreProcessImage(&img, &outfile, sizex, sizey);
-  for (int n = 0; n < ImageSize; n++)
-  {
-   trainData->data.fl[i * ImageSize + n] = outfile.data[n];
-  }
-  trainClasses->data.fl[i] = i;
- }
-
+void LearnFromImages(CvMat* trainData, CvMat* trainClasses) {
+	Mat img;
+	char file[255];
+	for (int i = 0; i < classes; i++) {
+		sprintf(file, "%s/%d.png", pathToImages, i);
+		img = imread(file, 1);
+		if (!img.data) {
+			std::cout << "File " << file << " not found\n";
+			exit(1);
+		}
+		Mat outfile;
+		PreProcessImage(&img, &outfile, sizex, sizey);
+		for (int n = 0; n < ImageSize; n++)	{
+			trainData->data.fl[i * ImageSize + n] = outfile.data[n];
+		}
+		trainClasses->data.fl[i] = i;
+	}
 }
 
 void RunSelfTest(KNearest& knn2) {
@@ -107,27 +89,24 @@ void RunSelfTest(KNearest& knn2) {
 	int z = 0;
 	while (z++ < 10) {
 		int iSecret = rand() % 10;
-		//cout << iSecret;
+		//std::cout << iSecret;
 		sprintf(file, "%s/%d.png", pathToImages, iSecret);
 		img = imread(file, 1);
 		Mat stagedImage;
 		PreProcessImage(&img, &stagedImage, sizex, sizey);
-		for (int n = 0; n < ImageSize; n++)
-			{
-				   sample2->data.fl[n] = stagedImage.data[n];
-  }
-  float detectedClass = knn2.find_nearest(sample2, 1);
-  if (iSecret != (int) ((detectedClass)))
-  {
-   cout << "Falsch. Ist " << iSecret << " aber geraten ist "
-	 << (int) ((detectedClass));
-   exit(1);
-  }
-  cout << "Richtig " << (int) ((detectedClass)) << "\n";
-  imshow("single", img);
-  waitKey(0);
- }
-
+		for (int n = 0; n < ImageSize; n++) {
+			sample2->data.fl[n] = stagedImage.data[n];
+		}
+		float detectedClass = knn2.find_nearest(sample2, 1);
+		if (iSecret != (int) ((detectedClass))) {
+			std::cout << "Falsch. Ist " << iSecret << " aber geraten ist "
+			<< (int) ((detectedClass));
+			exit(1);
+		}
+		std::cout << "Richtig " << (int) ((detectedClass)) << "\n";
+		imshow("single", img);
+		waitKey(0);
+	}
 }
 
 void AnalyseImage(KNearest knearest) {
@@ -145,18 +124,17 @@ void AnalyseImage(KNearest knearest) {
 			Rect rec = boundingRect(cnt);
 			if (rec.height > 28) {
 				Mat roi = image(rec);
-
 				Mat stagedImage;
 				PreProcessImage(&roi, &stagedImage, sizex, sizey);
 				for (int n = 0; n < ImageSize; n++) {
 					sample2->data.fl[n] = stagedImage.data[n];
 				}
 				float result = knearest.find_nearest(sample2, 1);
-				rectangle(image, Point(rec.x, rec.y),
-				Point(rec.x + rec.width, rec.y + rec.height),
-				Scalar(0, 0, 255), 2);
+				rectangle( image, Point(rec.x, rec.y),Point(rec.x + rec.width, rec.y + rec.height),
+					       Scalar(0, 0, 255), 2
+					     );
 				imshow("all", image);
-				cout << result << "\n";
+				std::cout << result << "\n";
 				imshow("single", stagedImage);
 				waitKey(0);
 			}
