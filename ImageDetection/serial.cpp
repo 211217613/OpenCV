@@ -11,7 +11,6 @@
 #include <getopt.h>
 
 #include "serial.h"
-// TODO: remove namespaces
 // TODO: rename cpp
 // TODO: seperate functionality into different files
 // TODO: use cmake
@@ -22,9 +21,6 @@ int main(void) {
     char comando;
     char numero[20];
     char dato[30] = {};
-    // char c[30]={};
-    // char escribe[30]={};
-    // TODO: better error handling of serial port connections
     fd = serialport_init("/dev/ttyACM0", B9600);
 
     if (fd == -1) {
@@ -70,7 +66,7 @@ int serialport_init(const char* serialport, int baud) {
     int fd;
     fd = open(serialport, O_RDWR | O_NOCTTY);
     if (fd == -1) {
-        perror("init_serialport: Unable to open port ");
+        perror("init_serialport: Unable to open port\n Is the device attached? ");
         return EXIT_FAILURE;  // TODO: use exit status
     }
 
