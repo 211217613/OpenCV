@@ -22,29 +22,6 @@ int serialport_write(int fd, const char* str);
 
 int serialport_read_until(int fd, char* buf, char until);
 
-// From other file...keeping here to see whats good
-// int main(void){
-//     int fd = 0;
-//     int rc = 0;
-//     char dato[3] ={'1','1','1'};
-
-
-//     fd = serialport_init("/dev/ttyACM0", B9600);
-
-//     if(fd == -1) return -1; // Si no se abre el puerto termina el program
-
-//         usleep(3000 * 1000 );    // Retardo de 3,000,000 us = 3s
-
-//     rc = serialport_write(fd, dato);
-//     if(rc==-1) return -1;
-
-//     rc = serialport_writebyte(fd, 'A');
-//     if(rc==-1) return -1;
-
-//     close(fd);
-//     exit(EXIT_SUCCESS);
-// }
-
 int main(void) {
     int fd = 0;
     int opc;
