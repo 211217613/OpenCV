@@ -6,7 +6,6 @@
 #include <stdio.h>
 
 using namespace cv;
-using namespace std;
 
 const int train_samples = 1;
 const int classes = 10;
@@ -69,7 +68,7 @@ void LearnFromImages(CvMat* trainData, CvMat* trainClasses) {
 		sprintf(file, "%s/%d.png", pathToImages, i);
 		img = imread(file, 1);
 		if (!img.data) {
-			cout << "File " << file << " not found\n";
+			std::cout << "File " << file << " not found\n";
 			exit(1);
 		}
 		Mat outfile;
@@ -90,7 +89,7 @@ void RunSelfTest(KNearest& knn2) {
 	int z = 0;
 	while (z++ < 10) {
 		int iSecret = rand() % 10;
-		//cout << iSecret;
+		//std::cout << iSecret;
 		sprintf(file, "%s/%d.png", pathToImages, iSecret);
 		img = imread(file, 1);
 		Mat stagedImage;
@@ -100,11 +99,11 @@ void RunSelfTest(KNearest& knn2) {
 		}
 		float detectedClass = knn2.find_nearest(sample2, 1);
 		if (iSecret != (int) ((detectedClass))) {
-			cout << "Falsch. Ist " << iSecret << " aber geraten ist "
+			std::cout << "Falsch. Ist " << iSecret << " aber geraten ist "
 			<< (int) ((detectedClass));
 			exit(1);
 		}
-		cout << "Richtig " << (int) ((detectedClass)) << "\n";
+		std::cout << "Richtig " << (int) ((detectedClass)) << "\n";
 		imshow("single", img);
 		waitKey(0);
 	}
@@ -135,7 +134,7 @@ void AnalyseImage(KNearest knearest) {
 					       Scalar(0, 0, 255), 2
 					     );
 				imshow("all", image);
-				cout << result << "\n";
+				std::cout << result << "\n";
 				imshow("single", stagedImage);
 				waitKey(0);
 			}
