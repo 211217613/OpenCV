@@ -34,7 +34,6 @@ int i = 0;
 
 
 using namespace std;
-using namespace cv;
 
 extern Mat plantilla, camera, camera_small;
 
@@ -46,8 +45,8 @@ void buttonCallBackLedOff(int state, void *){
 	if(state != 1){
 		std::cout << " The button has been pressed" << endl;
 		std::cout << " Turning LED OFF . . . " << endl;
-		putText(plantilla, "LED ON", Point(53,266), FONT_HERSHEY_PLAIN, 2, Scalar(255,255,255), 1);
-		putText(plantilla, "LED OFF", Point(53,266), FONT_HERSHEY_PLAIN, 2, Scalar(0,255,0), 1);
+		cv::putText(plantilla, "LED ON", Point(53,266), FONT_HERSHEY_PLAIN, 2, Scalar(255,255,255), 1);
+		cv::putText(plantilla, "LED OFF", Point(53,266), FONT_HERSHEY_PLAIN, 2, Scalar(0,255,0), 1);
 		serialport_writebyte(fd, 0); // initial value of the button is 1
 	}
 }
@@ -57,8 +56,8 @@ void buttonCallBackLedOn(int state, void *){
 	if(state != 1){
 		std::cout << " The button has been pressed" << endl;
 		std::cout << " Turning LED ON . . . " << endl;
-		putText(plantilla, "LED OFF", Point(53,266), FONT_HERSHEY_PLAIN, 2, Scalar(255,255,255), 1);
-		putText(plantilla, "LED ON", Point(53,266), FONT_HERSHEY_PLAIN, 2, Scalar(255,0,0), 1);
+		cv::putText(plantilla, "LED OFF", Point(53,266), FONT_HERSHEY_PLAIN, 2, Scalar(255,255,255), 1);
+		cv::putText(plantilla, "LED ON", Point(53,266), FONT_HERSHEY_PLAIN, 2, Scalar(255,0,0), 1);
 		serialport_writebyte(fd, 1);
 	}
 }
@@ -71,7 +70,7 @@ void buttonCallBackSave(int state, void *){
 			std::cout << " Saving.... " << endl;
 			sprintf ( imagen, "Imagen%d.png",i);
 			i++;
-			imwrite( imagen, camera);
+			cv::imwrite( imagen, camera);
 			puts(imagen);
 			break;
 		}// End While
