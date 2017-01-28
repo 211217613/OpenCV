@@ -10,17 +10,11 @@
 #include <sys/ioctl.h>
 #include <getopt.h>
 
+#include "serial.h"
 // TODO: remove namespaces
 // TODO: rename cpp
 // TODO: seperate functionality into different files
 // TODO: use cmake
-int serialport_init(const char* serialport, int baud);
-
-int serialport_writebyte(int fd, uint8_t b);
-
-int serialport_write(int fd, const char* str);
-
-int serialport_read_until(int fd, char* buf, char until);
 
 int main(void) {
     int fd = 0;
