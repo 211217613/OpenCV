@@ -1,9 +1,3 @@
-// #include <opencv2/core/core.hpp>
-// #include <opencv2/ml/ml.hpp>
-// #include <opencv/cv.h>
-// #include <opencv2/imgproc/imgproc.hpp>
-// #include <opencv2/highgui/highgui.hpp>
-
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,23 +14,6 @@
 // TODO: rename cpp
 // TODO: seperate functionality into different files
 // TODO: use cmake
-using namespace cv;
-
-/*
-Plantilla 3: SOn los elementos basicos que permiten comunicar al arduino y linux mediante el puerto de comuncacion serial.
-Contiene 3 funciones:
-
- serialport_init -> inicializar el puerto serial con dos parametros de entrada, el puerto y la velocidad.
-
-    serialport_writebyte -> escribir un byte (0-255) en puerto serial indicado por la variable fd.
-
-TTYACM0   TTYACM1
- COM1       COM2   
-
-serialport_write -> escribir una cadena de caracteres en puerto serial indicado por la variable fd.
-
-
-*/
 int serialport_init(const char* serialport, int baud);
 
 int serialport_writebyte(int fd, uint8_t b);
