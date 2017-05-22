@@ -162,7 +162,7 @@ int main(int argc,char** argv){
 				cout << "contourArea " << contourArea(cnt) << endl;
 				rec = boundingRect(cnt); //se rodea con un rectangulo a los contornos encontrados
 				cout << "rec.height " << rec.height << endl;
-				if(rec.height > 50){
+                                if(rec.height > 50) {
 					cout << "DEBUG: Entering second if" << endl;
 
 					Mat roi = imagen_file(rec);
@@ -197,10 +197,10 @@ int main(int argc,char** argv){
 			}
 		}
 		if(waitKey(30)>=0){
-			camara.release();
-			destroyAllWindows();
-			break;
+                        camara.release();
+                        destroyAllWindows();
+                        break;
 		}
 	}
 	return 0;
-} //end main
+}
