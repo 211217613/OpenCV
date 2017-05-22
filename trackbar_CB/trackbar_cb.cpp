@@ -1,7 +1,3 @@
-/*
-g++ -Wall -o salida practica4.cpp `pkg-config --cflags --libs opencv`
-*/
-
 #include <iostream>
 
 #include <opencv2/core/core.hpp>
