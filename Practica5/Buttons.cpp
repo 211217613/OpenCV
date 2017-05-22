@@ -1,5 +1,3 @@
-/* g++ -Wall -o Buttons Buttons.cpp `pkg-config --cflags --libs opencv` */
-// CPP cout include
 #include <iostream>
 
 // OpenCV libraries
@@ -8,9 +6,10 @@
 #include <opencv/cv.h>
 #include <opencv2/imgproc/imgproc.hpp>  // image filtering, 
 #include <opencv2/highgui/highgui.hpp> //GUI, reading and writing images and video
+//end OpenCV Libraries
+
 #include <stdlib.h>
 #include <stdio.h> //sprintf()
-//end OpenCV Libraries
 
 
 #include <stdio.h>    
@@ -30,10 +29,6 @@
 #include "Serial.h"
 
 int fd;
-int i = 0;
-
-
-using namespace std;
 
 extern Mat plantilla, camera, camera_small;
 
@@ -63,12 +58,13 @@ void buttonCallBackLedOn(int state, void *){
 }
 
 void buttonCallBackSave(int state, void *){
+        int image_index = 0;
 	if(state != 1){
 		char imagen[11];
 		while(1){
 			std::cout << " The button has been pressed" << endl;
 			std::cout << " Saving.... " << endl;
-			sprintf ( imagen, "Imagen%d.png",i);
+			sprintf(imagen, "Imagen%d.png", image_index);
 			i++;
 			cv::imwrite( imagen, camera);
 			puts(imagen);
